@@ -1,9 +1,12 @@
 from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
+from werkzeug.security import generate_password_hash, check_password_hash
+import mysqldb
 from flask_jwt_extended import (
     JWTManager, jwt_required, create_access_token,
     get_jwt_identity
 )
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'super-secret'
@@ -12,7 +15,8 @@ jwt = JWTManager(app)
 api = Api(app, prefix="/api/v1")
 
 USER_DATA = {
-    "user1": "abc123"
+    "user1": "abc123",
+    "user2":"userpass"
 }
 
 @app.route('/login', methods=['POST'])
@@ -27,7 +31,7 @@ def login():
     if not password:
         return jsonify({"msg": "Missing password parameter"}), 400
 
-    if username != USER_DATA.get(username) or password != 'test':
+    if username != USER_DATA.get(username) and password not in USER_DATA[username]:
         return jsonify({"msg": "Bad username or password"}), 401
 
     access_token = create_access_token(identity=username)
@@ -41,7 +45,8 @@ class PrivateResource(Resource):
         return {"badge_number": 445566}
 
 
-api.add_resource(PrivateResource, '/private')
+#api.add_resource(PrivateResource, '/private')
 
 if __name__ == '__main__':
     app.run(debug=True)
+    mysqldb.addUser("HANS","DUFF")
