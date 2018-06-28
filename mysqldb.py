@@ -15,4 +15,4 @@ def addUser(Fname,Lname):
         connection.close()
 
     finally:
-        print('BAD')
+        return 'User data added succesfully!'
