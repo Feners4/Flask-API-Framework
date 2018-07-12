@@ -16,3 +16,25 @@ def addUser(Fname,Lname):
 
     finally:
         return 'User data added succesfully!'
+
+def addPassword(Username,Userpassword):
+    try:
+        cursorObject = connection.cursor()
+        cursorObject.execute("call sp_createPassword('{}'".format(Username)+",'{}')".format(Userpassword))
+        connection.commit()
+        connection.close()
+
+    finally:
+        return 'User added succesfully!'
+
+def getLoginUser(username):
+    try:
+        cursorObject = connection.cursor()
+        #username = request.form['username']
+        cursorObject.execute("SELECT * FROM tbl_passwords WHERE user_name =%s", [username])
+        data = cursorObject.fetchone()
+        password = data['user_password']
+        db_username = data['user_name']
+
+    finally:
+        return password,db_username
