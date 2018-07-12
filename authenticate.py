@@ -45,7 +45,7 @@ class PrivateResource(Resource):
         return mysqldb.addUser("{}".format(str(data['first_name'])),"{}".format(str(data['last_name'])))
 
 class PasswordResource(Resource):
-    @app.route('/password', methods=['GET'])
+    @app.route('/register', methods=['GET'])
     @jwt_required
 
     def sendPassword():
